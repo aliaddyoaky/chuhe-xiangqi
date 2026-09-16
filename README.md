@@ -1,17 +1,72 @@
-# 楚河汉界 · 中国象棋
+# Chu He Han Jie — Chinese Chess
 
-一款适合手机浏览器的中国风象棋小游戏。支持与电脑对弈、同屏双人对弈，以及通过六位房间号远程对弈。
+A mobile-friendly Xiangqi game with a traditional Chinese-inspired interface. Play against the computer, take turns with a friend on one device, or invite someone to a private online room.
 
-## 玩法
+**[Play the game](https://aliaddyoaky.github.io/chuhe-xiangqi/)** · **[View the source code](https://github.com/aliaddyoaky/chuhe-xiangqi)**
 
-- 选择棋子后，点击棋盘上的提示点落子；点击被圈出的对方棋子可以吃子。
-- 进入页面选择人机、同屏双人或远程对弈；人机模式可选择入门、标准或挑战难度。
-- 远程对弈中，创建者获得六位房间号并执红；朋友在自己的设备上打开同一个游戏网址，输入房间号后执黑。双方保持页面打开，棋步会实时同步。
-- 模式和难度在开局时确定，本局开始后不能更改。刷新页面只会显示“继续上局”；结束本局后可重新选择。
-- 右上角的“设置”可查看当前状态与棋谱，并进行悔棋、以原设置重新开局或认输。
-- 对局界面顶部的“退出 · 返回主页”会在确认后结束当前棋局，返回模式选择主页；远程对局同时断开房间连接。
-- 按中国象棋规则走棋，包含蹩马腿、塞象眼、炮架、九宫、过河、将帅照面、将军、将死与困毙。
-- 将死、困毙或认输后会显示胜负结果，可再来一局、更换对手或查看最终棋局。
-- 人机和同屏模式可以悔棋、重新开局，对局会保存在当前浏览器里。远程模式不提供悔棋和单方面重开；退出或刷新页面会断开连接，创建者保持在线时可用原房间号重新加入。
-- 人机模式中，电脑执黑；悔棋会撤回双方最近一回合。双人模式中，每次悔棋撤回一步。
+## Features
 
+- **Three game modes:** computer opponent, two players on one screen, and online play with a six-digit room code.
+- **Three AI difficulty levels:** Beginner, Standard, and Challenge. The computer plays Black; Red moves first.
+- **Xiangqi rules:** legal-move hints, captures, check, checkmate, stalemate, the flying general rule, horse-leg blocking, elephant-eye blocking, cannon screens, and river and palace restrictions.
+- **Match controls:** move history, undo and restart in computer or same-screen games, resignation, and a confirmed exit back to the mode-selection screen.
+- **Local progress:** computer and same-screen games are saved in the current browser and can be resumed after a refresh.
+- **Responsive layout:** designed for touch screens and usable on desktop browsers.
+
+## How to Play
+
+1. Open the [live game](https://aliaddyoaky.github.io/chuhe-xiangqi/) and choose a mode. Select a difficulty if playing against the computer.
+2. Tap or click one of your pieces. Available destinations appear on the board.
+3. Tap a highlighted destination to move, or tap a highlighted opposing piece to capture it.
+4. Open **设置** (Settings) to see the move history and available match controls. Use **退出 · 返回主页** (Exit · Home) to end the current match and choose a new mode.
+
+Red always moves first. If your general is in check, your next move must resolve it. A match ends when a player is checkmated, has no legal move, or resigns.
+
+### Playing Online
+
+1. Both players open the **same public game URL** on separate devices.
+2. One player chooses **远程对弈** (Online Play) and **创建房间** (Create Room). The game generates a six-digit code; the creator plays Red.
+3. The other player chooses **远程对弈** (Online Play), enters that code, and joins as Black.
+4. Keep both pages open while playing. If the guest disconnects, they can rejoin using the same code while the host's room remains open.
+
+Online play uses PeerJS and a public signaling service to establish a browser-to-browser connection. Both players need internet access and browsers that support WebRTC. Network restrictions or signaling-service outages can prevent a connection. Online games do not support undo, unilateral restart, or saved progress after leaving the page.
+
+## Run Locally
+
+No package installation or build step is required. Serve the repository directory with a local HTTP server:
+
+```bash
+git clone https://github.com/aliaddyoaky/chuhe-xiangqi.git
+cd chuhe-xiangqi
+python3 -m http.server 8765
+```
+
+Open [http://localhost:8765/](http://localhost:8765/) in your browser. `localhost` is only accessible on your own computer; use the public site for a game across devices.
+
+## Project Structure
+
+| File | Purpose |
+| --- | --- |
+| `index.html` and `style.css` | Game interface, board, dialogs, and responsive styling |
+| `app.mjs` | Match flow, controls, browser storage, and online room connections |
+| `engine.mjs` | Xiangqi rules, legal moves, game outcomes, and computer opponent |
+| `engine.test.mjs` | Automated tests for the chess engine |
+| `peerjs.min.js` | Bundled PeerJS client for online play |
+
+The game uses plain HTML, CSS, and JavaScript modules. The computer opponent uses a depth-limited game-tree search; the three difficulty settings use different search depths.
+
+## Tests
+
+With Node.js installed, run:
+
+```bash
+node --test engine.test.mjs
+```
+
+## Deployment
+
+The game is published as a static site with GitHub Pages. To deploy a fork, open the repository's **Settings → Pages**, choose **Deploy from a branch**, and select **`main`** and **`/ (root)`**. The site entry point is `index.html` in the repository root.
+
+## Third-Party Software
+
+The bundled PeerJS client is covered by its own MIT license; see [PEERJS-LICENSE.txt](PEERJS-LICENSE.txt).
