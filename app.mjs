@@ -25,6 +25,7 @@ const roomDialog=$('roomDialog');
 const settingsDialog=$('settingsDialog');
 const resultDialog=$('resultDialog');
 const resignDialog=$('resignDialog');
+const exitDialog=$('exitDialog');
 let resigningSide = RED;
 
 try {
@@ -109,6 +110,7 @@ function render() {
   els.undo.disabled=mode==='remote'||!started||history.length<=1||!!outcome;
   $('restartButton').disabled=mode==='remote';
   $('resignButton').disabled=!started||!!outcome;
+  $('matchToolbar').hidden=!started;
   $('leaveActiveRoom').hidden=mode!=='remote';
   $('resultRematch').hidden=mode==='remote';
   $('resultChoose').textContent=mode==='remote'?'退出房间':'更换对手';
@@ -137,7 +139,7 @@ function commitMove(move) {
 }
 function scheduleAI() {
   const {board,turn}=current();
-  if (!started || mode!=='ai' || turn!==BLACK || currentOutcome() || settingsDialog.open || resignDialog.open) return;
+  if (!started || mode!=='ai' || turn!==BLACK || currentOutcome() || settingsDialog.open || resignDialog.open || exitDialog.open) return;
   clearAI(); const ticket=generation;
   aiTimer=setTimeout(() => {
     if (ticket!==generation || mode!=='ai' || current().turn!==BLACK) return;
@@ -265,6 +267,23 @@ $('confirmResign').addEventListener('click',()=>{
   save(); resignDialog.close(); render();
   if (mode==='remote') sendSync();
   showResult(currentOutcome());
+});
+
+$('exitButton').addEventListener('click',()=>{
+  if (!started) return;
+  clearAI();
+  $('exitExplanation').textContent=mode==='remote'
+    ? '退出后将结束本局、断开房间连接并返回主页。'
+    : '退出后将结束本局并返回主页，当前棋局不会保留。';
+  exitDialog.showModal();
+});
+$('cancelExit').addEventListener('click',()=>exitDialog.close());
+exitDialog.addEventListener('close',scheduleAI);
+$('confirmExit').addEventListener('click',()=>{
+  clearAI(); exitDialog.close();
+  if (mode==='remote') { leaveRemote(); return; }
+  history=[INITIAL()]; selected=null; started=false; wasStarted=false;
+  save(); openStart();
 });
 
 function setRoomStatus(message) { $('roomStatus').textContent=message; }

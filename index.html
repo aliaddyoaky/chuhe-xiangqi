@@ -21,6 +21,10 @@
       </div>
     </header>
 
+    <div id="matchToolbar" class="match-toolbar" hidden>
+      <button id="exitButton" class="exit-button" type="button">↩ 退出 · 返回主页</button>
+    </div>
+
     <div class="game-layout">
       <section class="arena" aria-label="象棋棋盘">
         <div class="player-strip opponent">
@@ -122,6 +126,14 @@
     <p id="resignExplanation" class="flow-intro">认输后本局立即结束。</p>
     <button id="confirmResign" class="flow-primary" type="button">确认认输</button>
     <button id="cancelResign" class="flow-secondary" type="button">继续对弈</button>
+  </dialog>
+
+  <dialog id="exitDialog" class="flow-dialog exit-dialog" aria-labelledby="exitTitle">
+    <span class="eyebrow">LEAVE THE MATCH</span>
+    <h2 id="exitTitle">退出当前对局？</h2>
+    <p id="exitExplanation" class="flow-intro">退出后将结束本局并返回主页，当前棋局不会保留。</p>
+    <button id="confirmExit" class="flow-primary" type="button">退出并返回主页</button>
+    <button id="cancelExit" class="flow-secondary" type="button">继续对弈</button>
   </dialog>
 
   <dialog id="resultDialog" class="flow-dialog result-dialog" aria-labelledby="resultTitle">
